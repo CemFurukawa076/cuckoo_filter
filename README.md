@@ -27,3 +27,10 @@ The trade-off here is that the filter stores only fingerprints, not the original
 - Duplicate inserts are allowed and increase the internal size counter, but the filter stores identical fingerprints. Deleting one duplicate removes a single fingerprint.
 - `delete` returns `True` if it found and removed a matching fingerprint, otherwise `False`.
 - The false positive rate depends on the fingerprint size (64 bits here) and the load factor; as the filter fills, false positives become more likely.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
